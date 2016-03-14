@@ -2,6 +2,9 @@
   JS JS Baby Shortcuts
 
   A simple and easy way to add shortcuts to your javasript app.
+
+  Thanks to @wesbos for the initial keymap.
+  https://github.com/wesbos/keycodes/blob/gh-pages/scripts.js
 */
 
 
