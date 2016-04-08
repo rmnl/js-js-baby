@@ -12,6 +12,8 @@ if(
   'addEventListener' in window
 ) {
 
+  // Array extensions
+
   Array.prototype.rm = function (val) {
     var index = this.indexOf(val);
     if (index >= 0) this.splice(index, 1);
@@ -33,6 +35,48 @@ if(
   Array.prototype.append = function (val) {
     this[this.length] = val;
     return this;
+  };
+
+  // querystring
+
+  var parseQueryString = function (queryString) {
+    var i, pairs, pair, query = {};
+    if ('string' != typeof(queryString)) return {};
+    pairs = queryString.split('&');
+    for (i = 0; i < pairs.length; i++) {
+      pair = pairs[i].split('=');
+      if (pair.length == 1) query[pair[0]] = true;
+      if (pair.length == 2) {
+        query[pair[0]] = decodeURIComponent(pair[1]);
+        if (parseInt(query[pair[0]], 10) + "" == query[pair[0]])
+          query[pair[0]] = parseInt(query[pair[0]], 10);
+      };
+    }
+    return query;
+  };
+
+  var updateQueryString = function (original_query, updated_params) {
+    var param, params, i, pairs = [],
+        query = JSON.parse(JSON.stringify(original_query));
+    if (updated_params) {
+      for (param in updated_params) {
+        query[param] = updated_params[param];
+      }
+    }
+    params = Object.keys(query).sort();
+    for (i = 0; i < params.length; i++) {
+      param = params[i];
+      if (true === query[param]) {
+        pairs[pairs.length] = param;
+      } else if (
+        null !== query[param] &&
+        false !== query[param] &&
+        undefined !== query[param]
+      ) {
+        pairs[pairs.length] = param + '=' + encodeURIComponent(query[param]);
+      }
+    }
+    return pairs.join('&');
   };
 
 }
